@@ -42,6 +42,10 @@ const PIP_CLASSES_DROP = [
     "dropdown",  "dropup", "dropright", "dropleft"
 ];
 
+const PIP_VALUES_WIDTH_MEGA = [
+    50,  100
+];
+
 const PIP_FX_DROP = [
     "fadeup",  "fadedown", "fade", "up", "down"
 ];
@@ -313,8 +317,6 @@ var pip_getEventBy = function(event){
 // função para gerar o evento no botão do tipo DROP
 // pode ser dropup, dropdown, dropleft ou dropright
 var pip_dropdown = function(element){
-    
-
    
     let toggle    = element.querySelector('.dropdown-toggle');
     let elContent = element.querySelector('.dropdown-menu');
@@ -333,15 +335,11 @@ var pip_dropdown = function(element){
         } else {
             toggle.focus();
             if(ev == 'click') $(toggle).addClass('pip-has-focus')
+            if(!$(elContent).hasClass('show'))
             pip_on_show(elContent, fx[0], fx[1]);
         }
     });
-    /*
-    elContent.addEventListener('click', function(e){
-        if($(e.target).hasClass('dropdown-item'))
-            $(elContent).removeClass('show');
-    })
-    */
+
     if(ev == 'mouseenter')
     element.addEventListener('mouseleave', function(){
         toggle.blur();
@@ -360,31 +358,25 @@ var pip_dropdown = function(element){
 // função para mega menu
 // esta função altera os elementos a partir da tela
 var pip_width_change = function(){
+    
     // adiciona as larguras configuradas
-    // define o megamenu 50%
-    Array.from($('.dropdown-menu.mega-menu-50')).forEach(function(element){
-        if(pip_width_device < 992){
-            $(element).css('width', '');
-        } else {
-            $(element).css('width', (pip_width_device / 2)+'px');
-            let pos = $(element).attr('pip-postition');
-            if (typeof pos !== typeof undefined && pos !== false) {
-                $(element).css('left', pos+'px');
+    // define o megamenu pela porcentagem indicada
+
+    PIP_VALUES_WIDTH_MEGA.forEach(function(el){
+        let divisor = 100 / el;
+        Array.from($('.dropdown-menu.mega-menu-'+el)).forEach(function(element){
+            if(pip_width_device < 992){
+                $(element).css('width', '');
+            } else {
+                $(element).css('width', (pip_width_device / divisor)+'px');
+                let pos = $(element).attr('pip-postition');
+                if (typeof pos !== typeof undefined && pos !== false) {
+                    $(element).css('left', pos+'px');
+                }
             }
-        }
+        });
     });
-    // define o megamenu 100%
-    Array.from($('.dropdown-menu.mega-menu-100')).forEach(function(element){
-        if(pip_width_device < 992){
-            $(element).css('width', '');
-        } else {
-            $(element).css('width', pip_width_device+'px');
-            let pos = $(element).attr('pip-postition');
-            if (typeof pos !== typeof undefined && pos !== false) {
-                $(element).css('left', pos+'px');
-            }
-        }
-    });
+
 }
 
 
